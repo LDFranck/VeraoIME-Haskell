@@ -2,8 +2,8 @@ O que é isomorfismo? Duas estruturas matemáticas são ditas isomorfas se há u
 bijetivo entre elas. Ou seja, existe uma relação de correspondência de modo que cada elemento
 de um corresponde a um, e somente um, elemento do outro, preservando as operações de ambos.
 
-Pergunta: Mostrar, em Haskell, que '3*a' e 'a+a+a' são isomorficos. 
-Lembrar: a composição da ida com a volta e da volta com a ida gera a funcao identidade.
+Pergunta: Mostrar, em Haskell, que '3*a' e 'a+a+a' são isomorfos. 
+Lembrar: a composição da ida com a volta e a da volta com a ida gera a funcao identidade.
 
 ---
 3*a \equiv (3,a) , ou seja, um tipo de tamanho 3 vezes o tipo a
@@ -14,7 +14,7 @@ Maybe Bool \equiv Just False | Just True | Nothing (3 opcoes)
 Assim 3*a \equiv (Maybe Bool, a) \equiv Maybe Bool a \equiv Just False a | Just True a | Nothing a
 
 Para finalizar: Just False \equiv 1, Just True \equiv 1 e Nothing \equiv 1
-Logo Just False a | Just True a | Nothing a \equiv 1*a + 1*a + 1*a \equiv 3*a
+Logo, Just False a | Just True a | Nothing a \equiv 1*a + 1*a + 1*a \equiv 3*a
 ---
 
 data ParteD a = Opcao1 a | Opcao2 a | Opcao3 a deriving Show
@@ -49,3 +49,4 @@ Assim, ida $ volta (Opcao2 x) \equiv id (Opcao2 x)
 
 ida $ volta (Opcao3 x) \equiv ida (Nothing, x) \equiv Opcao3 x
 Assim, ida $ volta (Opcao3 x) \equiv id (Opcao3 x)
+---
