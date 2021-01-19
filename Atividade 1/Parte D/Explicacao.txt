@@ -12,41 +12,45 @@ Sabendo que Maybe x \equiv x+1 e que Bool \equiv 2 , pode-se chegar ao tipo de t
 Maybe Bool \equiv Just False | Just True | Nothing (3 opcoes)
 
 Assim 3*a \equiv (Maybe Bool, a) \equiv Maybe Bool a \equiv Just False a | Just True a | Nothing a
+E sabendo que Just False \equiv 1, Just True \equiv 1 e Nothing \equiv 1, tem-se que
+Just False a | Just True a | Nothing a \equiv 1*a + 1*a + 1*a \equiv 3*a
 
-Para finalizar: Just False \equiv 1, Just True \equiv 1 e Nothing \equiv 1
-Logo, Just False a | Just True a | Nothing a \equiv 1*a + 1*a + 1*a \equiv 3*a
+Agora para a + a + a usa-se o Either a b \equiv a + b 
+Assim, a + a + a \equiv Either (Either a a) a  \equiv Left (Left a) | Left (Right a) | Right a
+Como anteriormente, as palavras reservadas Left \equiv 1 e Right \equiv 1 e | representa +
+Logo, 1*(1*a) | 1*(1*a) | 1*a \equiv a | a | a \equiv a + a + a \equiv 3*a
+
+Dessa forma obtem-se os tipos de ida e volta e as seguintes funções podem ser verificadas:
 ---
 
-data ParteD a = Opcao1 a | Opcao2 a | Opcao3 a deriving Show
+ida :: (Maybe Bool, a) -> Either (Either a a) a
+ida (Just False, a) = Left (Left a)
+ida (Just True, a) = Left (Right a)
+ida (Nothing, a) = Right a
 
-ida :: (Maybe Bool, a) -> ParteD a
-ida (Just False, x) = Opcao1 x
-ida (Just True, x) = Opcao2 x
-ida (Nothing, x) = Opcao3 x
-
-volta :: ParteD a -> (Maybe Bool, a)
-volta (Opcao1 x) = (Just False, x)
-volta (Opcao2 x) = (Just True, x)
-volta (Opcao3 x) = (Nothing, x)
+volta :: Either (Either a a) a -> (Maybe Bool, a)
+volta (Left (Left a)) = (Just False, a)
+volta (Left (Right a)) = (Just True, a)
+volta (Right a) = (Nothing, a)
 
 ---
 Abrindo composições:
 
-volta $ ida (Just False, x) \equiv volta (Opcao1 x) \equiv (Just False, x)
+volta $ ida (Just False, x) \equiv volta (Left (Left x)) \equiv (Just False, x)
 Assim, volta $ ida (Just False, x) \equiv id (Just False, x)
 
-volta $ ida (Just True, x) \equiv volta (Opcao2 x) \equiv (Just True, x)
+volta $ ida (Just True, x) \equiv volta (Left (Right x)) \equiv (Just True, x)
 Assim, volta $ ida (Just True, x) \equiv id (Just True, x)
 
-volta $ ida (Nothing, x) \equiv volta (Opcao3 x) \equiv (Nothing, x)
+volta $ ida (Nothing, x) \equiv volta (Right x) \equiv (Nothing, x)
 Assim, volta $ ida (Nothing, x) \equiv id (Nothing, x)
 
-ida $ volta (Opcao1 x) \equiv ida (Just False, x) \equiv Opcao1 x
-Assim, ida $ volta (Opcao1 x) \equiv id (Opcao1 x)
+ida $ volta (Left (Left x)) \equiv ida (Just False, x) \equiv Left (Left x)
+Assim, ida $ volta (Left (Left x)) \equiv id (Left (Left x))
 
-ida $ volta (Opcao2 x) \equiv ida (Just True, x) \equiv Opcao2 x
-Assim, ida $ volta (Opcao2 x) \equiv id (Opcao2 x)
+ida $ volta (Left (Right x)) \equiv ida (Just True, x) \equiv Left (Right x)
+Assim, ida $ volta (Left (Right x)) \equiv id (Left (Right x))
 
-ida $ volta (Opcao3 x) \equiv ida (Nothing, x) \equiv Opcao3 x
-Assim, ida $ volta (Opcao3 x) \equiv id (Opcao3 x)
+ida $ volta (Right x) \equiv ida (Nothing, x) \equiv Right x
+Assim, ida $ volta (Right x) \equiv id (Right x)
 ---
